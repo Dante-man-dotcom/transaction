@@ -94,6 +94,15 @@
             </tr>
         </thead>
         <tbody>
+            {% if ack %}
+                {% for a in ack %}
+                    <tr>
+                        <td>{{ n.id }}</td>
+                        <td>{{ n.created_at|date:"Y-m-d H:i" }}</td>
+                        <td> You recieved a new acknowledgement from {{ a.from_user }} </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
             {% for n in notif %}
                 <tr>
                     <td>{{ n.id }}</td>
