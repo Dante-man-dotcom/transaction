@@ -52,6 +52,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'transac_history.urls'
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://transac-ithq.onrender.com/',
+    'http://transac-ithq.onrender.com/',
+    'https://transac-ithq.onrender.com',
+    'http://transac-ithq.onrender.com',
+    'https://www.transac-ithq.onrender.com',
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
