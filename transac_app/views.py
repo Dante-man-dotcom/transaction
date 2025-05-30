@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
 from .models import *
 from django.contrib import messages
 from django.utils.dateparse import parse_date
@@ -50,7 +51,7 @@ def home(request):
         return redirect(loginpage)
     notif=Notification.objects.filter(user=request.user).order_by('-created_at')
     ack=Acknowledgement.objects.filter(models.Q(to_user=request.user, status = 'pending')).order_by('-acknowledged_at')
-    recent_transactions = Transaction.objects.filter(model.Q(sender=request.user) | model.Q(receiver=request.user)).order_by('-created_at')[:3]
+    recent_transactions = Transaction.objects.filter(Q(sender=request.user) | Q(receiver=request.user)).order_by('-created_at')[:3]
     return render(request, 'dashboard.html', {'user': user, 'notif': notif, 'ack': ack, 'recent_transactions': recent_transactions})
 
 def transac(request):
