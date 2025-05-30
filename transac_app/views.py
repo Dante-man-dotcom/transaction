@@ -105,7 +105,7 @@ def ack_action(request, ack_id, action):
         ack.status = 'rejected'
         ack.save()
 
-        Notification.objects.create(user=ack.from_user,message=f"Acknowledgement from {ack.from_user.first_name} was rejected.")
+        Notification.objects.create(user=ack.from_user,message=f"Acknowledgement to {ack.to_user.first_name} was rejected.")
         print("Notification created")
 
     return redirect(home)
