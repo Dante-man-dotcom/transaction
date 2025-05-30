@@ -50,7 +50,7 @@ def home(request):
         return redirect(loginpage)
     notif=Notification.objects.filter(user=request.user).order_by('-created_at')
     ack=Acknowledgement.objects.filter(models.Q(to_user=request.user, status = 'pending')).order_by('-acknowledged_at')
-    recent_transactions = Transaction.objects.filter(model.Q(sender=request.user) | model.Q(receiver=request.user).order_by('-created_at')[:3]
+    recent_transactions = Transaction.objects.filter(model.Q(sender=request.user) | model.Q(receiver=request.user)).order_by('-created_at')[:3]
     return render(request, 'dashboard.html', {'user': user, 'notif': notif, 'ack': ack, 'recent_transactions': recent_transactions})
 
 def transac(request):
