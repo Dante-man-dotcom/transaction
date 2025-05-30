@@ -100,6 +100,7 @@ def ack_action(request, ack_id, action):
         ack.save()
 
         Transaction.objects.create(sender=ack.from_user,receiver=ack.to_user,data=ack.data,image=ack.image,acknowledged_at=ack.acknowledged_at)
+        Notification.objects.create(user=ack.from_user,message=f"Acknowledgement to {ack.to_user.first_name} was accepted.")
 
     elif action == 'reject':
         print("Rejected")
