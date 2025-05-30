@@ -1,0 +1,247 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: hsl(187, 39%, 49%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .container {
+            margin: 20px;
+        }
+        .btn {
+            padding: 8px 15px;
+            background-color: hsl(192, 39%, 49%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: hsl(188, 40%, 45%);
+        }
+        .notification-list, .acknowledgement-list {
+            margin-top: 20px;
+            display: none;
+        }
+        .show-notifications, .show-acknowledgements {
+            display: block;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: hsl(188, 39%, 49%);
+            color: white;
+        }
+        .section-title {
+            margin-top: 30px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Dashboard</h1>
+</div>
+
+<div class="container">
+    <h2>Welcome, {{ user.first_name }}</h2>
+
+    <p>Manage your transactions and acknowledgements below:</p>
+
+    <a href="{% url 'transac_history' %}" ><button class="btn">Go to Transaction History</button></a>
+    <a href="{% url 'transac' %}"><button class="btn">Send New Acknowledgement</button></a>
+
+    <button class="btn" onclick="toggleNotifications()">View Notifications</button>
+    <button class="btn" onclick="toggleAcknowledgements()">View Acknowledgements</button>
+    <a href="{% url 'logout' %}"><button class="btn">Logout</button></a>
+
+    <div id="notification-section" class="section-title">Recent Notifications</div>
+
+    
+    <div id="notification-list" class="notification-list"> 
+        <table>
+        <thead>
+            <tr>
+                <th>Notification ID</th>
+                <th>Timestamp</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for n in notif %}
+                <tr>
+                    <td>{{ n.id }}</td>
+                    <td>{{ n.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ n.message }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="3">No notifications found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        <!-- <table>
+            <thead>
+                <tr>
+                    <th>Notification ID</th>
+                    <th>Timestamp</th>
+                    <th>Message</th>
+                </tr>
+                {% if notifications %}
+                {% for i in notif %}
+                <tr>
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.created_at }}</td>
+                    <td>{{ i.message }}</td>
+                {% endfor %}
+                {% else %}
+                    <p>No notifications yet.</p>
+                {% endif %}
+            </thead>
+            <tbody>
+            </tbody>
+        </table> -->
+    </div>
+
+    <div id="acknowledgement-section" class="section-title">Recent Acknowledgements Received</div>
+    <div id="acknowledgement-list" class="acknowledgement-list">
+        <table>
+        <thead>
+            <tr>
+                <th>Acknowledgement ID</th>
+                <th>Timestamp</th>
+                <th>Data</th>
+                <th style="text-align: center;">Action</th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in ack %}
+                <tr>
+                    <td>{{ a.id }}</td>
+                    <td>{{ a.acknowledged_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ a.data }}</td>
+                    <td style="text-align: center;">
+                        <a href="{% url 'ack_action' a.id 'accept' %}" class="btn btn-success">Accept</a>
+                        <a href="{% url 'ack_action' a.id 'reject' %}" class="btn btn-danger">Reject</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4">No acknowledgements received.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        
+        <!-- <table>
+            <thead>
+                <tr>
+                    <th>Acknowledgement ID</th>
+                    <th>Timestamp</th>
+                    <th>Data</th>
+                    <th style="text-align: center;">Action</th> 
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table> -->
+    </div>
+     <div class="section-title">Recent Transactions</div>
+    <div class="transaction-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Timestamp</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in recent_transactions %}
+                <tr>
+                    <td>{{ tx.id }}</td>
+                    <td>{{ tx.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ tx.data }}</td>
+                    <!-- <td>{{ tx.status }}</td> -->
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No transactions found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    // Function to display recent transactions
+    // const transactions = [
+    //     { id: 'T001', timestamp: '2025-01-20 12:30', data: 'Payment of Rs. 50000 to vijay', status: 'Accepted' },
+    //     { id: 'T002', timestamp: '2025-01-21 14:20', data: 'Payment of Rs.5000 to vijay', status: 'Denied' },
+    //     { id: 'T003', timestamp: '2025-01-22 10:00', data: 'Payment of Rs. 2000 to vijay', status: 'Accepted' },
+    // ];
+
+    // function displayTransactions() {
+    //     const transactionList = document.getElementById('transaction-list');
+    //     transactionList.innerHTML = '';
+    //     transactions.slice(0, 3).forEach(tx => {
+    //         const row = document.createElement('tr');
+    //         row.innerHTML = `
+    //             <td>${tx.id}</td>
+    //             <td>${tx.timestamp}</td>
+    //             <td>${tx.data}</td>
+    //             <td>${tx.status}</td>
+    //         `;
+    //         transactionList.appendChild(row);
+    //     });
+    // }
+
+    // Toggle functions
+    function toggleNotifications() {
+        document.getElementById('notification-section').style.display = 'block';
+        document.getElementById('notification-list').style.display = 'block';
+
+        document.getElementById('acknowledgement-section').style.display = 'none';
+        document.getElementById('acknowledgement-list').style.display = 'none';
+    }
+
+    function toggleAcknowledgements() {
+        document.getElementById('notification-section').style.display = 'none';
+        document.getElementById('notification-list').style.display = 'none';
+
+        document.getElementById('acknowledgement-section').style.display = 'block';
+        document.getElementById('acknowledgement-list').style.display = 'block';
+    }
+
+    // Call on page load
+    window.onload = function () {
+        displayTransactions();
+        toggleNotifications(); // Default section visible on load
+    };
+</script>
+
+</body>
+</html>

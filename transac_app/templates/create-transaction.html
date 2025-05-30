@@ -1,0 +1,97 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Transaction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .container {
+            margin: 20px;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-container label {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .form-container input, .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        .form-container .btn-back {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Create New Transaction</h1>
+</div>
+
+<div class="container">
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data" action="{% url 'transac_create' %}">
+        {% csrf_token %}
+        <label for="transaction-id">Recipient name</label>
+        <input type="text" id="transaction-id" name="reciever" placeholder="Enter responder name..." required>
+        <label for="transaction-data">Transaction Data:</label>
+        <textarea id="transaction-data" rows="4" name ="data" placeholder="Enter transaction details..."></textarea>
+        <label for="Image">Upload a screenshot</label>
+        <!-- <button id="generate-hash">Generate Hash</button> -->
+         <input type="file" id="img1" name = 'image1' accept="image" class="i1"><br>
+        <br>
+        <!-- <label for="transaction-hash">Generated Hash:</label>
+        <input type="text" id="transaction-hash" readonly> -->
+
+        <button id="submit-transaction">Send Transaction to Responder</button>
+        </form>
+        <p style="color: red;">
+        {% for message in messages %}
+        {{message}}
+        {% endfor %}
+        </p>
+        <a href="{% url 'home' %}"><button class="btn-back">Back to Dashboard</button></a>
+    </div>
+</div>
+
+<script>
+    
+
+   
+</script>
+
+</body>
+</html>

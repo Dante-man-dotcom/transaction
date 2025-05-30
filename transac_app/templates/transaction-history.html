@@ -1,0 +1,163 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .container {
+            margin: 20px;
+        }
+        .search-filters {
+            margin-bottom: 20px;
+        }
+        .search-filters label {
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .search-filters input, .search-filters button {
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .btn {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Transaction History</h1>
+ </div>
+
+<div class="container">
+    <!-- Go to Dashboard Button -->
+    <a href="{% url 'home' %}" class="btn">Go to Dashboard</a>
+<br>
+    <!-- Search Filters -->
+    <div class="search-filters">
+        <form method="get" id="filter-form" action="{% url 'transac_filter' %}">
+        <label for="filter-date-start">Start Date:</label>
+        <input type="date" id="filter-date-start" name="start_date">
+        <label for="filter-date-end">End Date:</label>
+        <input type="date" id="filter-date-end" name="end_date">
+        <label for="filter-keyword">Keyword:</label>
+        <input type="text" id="filter-keyword" name="name" placeholder="Search by username...">
+        <button id="apply-filters">Apply Filters</button>
+        </form>
+    </div>
+    <h3>Use filters to access the data quickly</h3>
+    <h5>Note: inorder to filter according to the data use keyword filter otherwise use date filters</h5>
+    <h2>Your Transactions</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Timestamp</th>
+                <th>Data</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody id="transaction-list">
+            {% for tx in transactions %}
+                <tr>
+                    <td>{{ tx.id }}</td>
+                    <td>{{ tx.acknowledged_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ tx.data }}</td>
+                    <td>
+                        {% if tx.image %}
+                            <img src="{{ tx.image.url }}" style="max-width: 100px;" />
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4">No transactions found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- <table>
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Timestamp</th>
+                <th>Data</th>
+                <th>Hash</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="transaction-list">
+        </tbody>
+    </table> -->
+</div>
+
+<script>
+
+    // Function to apply filters
+    document.getElementById('apply-filters').addEventListener('click', function() {
+        const startDate = document.getElementById('filter-date-start').value;
+        const endDate = document.getElementById('filter-date-end').value;
+        const keyword = document.getElementById('filter-keyword').value.toLowerCase();
+
+        // Filter transactions by date range and keyword
+        const filteredTransactions = transactions.filter(transaction => {
+            const transactionDate = new Date(transaction.timestamp); // Convert timestamp to Date object
+
+            // Check if the transaction date is within the selected range
+            const startDateValid = startDate ? new Date(startDate) <= transactionDate : true;
+            const endDateValid = endDate ? new Date(endDate) >= transactionDate : true;
+
+            // Check if the keyword exists in transaction data
+            const keywordValid = keyword ? transaction.data.toLowerCase().includes(keyword) : true;
+
+            // Return true if the transaction matches both date and keyword filters
+            return startDateValid && endDateValid && keywordValid;
+        });
+
+        // Display filtered transactions
+        displayTransactions(filteredTransactions);
+    });
+
+    // Initially display all transactions
+    displayTransactions(transactions);
+</script>
+
+</body>
+</html>

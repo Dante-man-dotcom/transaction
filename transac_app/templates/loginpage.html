@@ -1,0 +1,138 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .form-container label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Login to Your Account</h1>
+    </div>
+
+    <div id="login-page" class="container">
+        <h2>Login</h2>
+        <div class="form-container">
+            <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <label for="email">Email</label>
+            <input type="email" id="login-email" name="username" placeholder="Enter your email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+
+            <button id="login-btn">Login</button>
+            <p style="color: red;">
+            {% for message in messages %}
+            {{message}}
+            {% endfor %}
+            </p>
+            </form>
+        </div>
+        <p>Don't have an account? <a href="#" onclick="showRegistrationPage()">Register Now</a></p> 
+    </div>
+
+    <div id="registration-page" class="container" style="display: none;"> 
+        <h2>Register</h2>
+        <div class="form-container">
+            <form method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            <label for="name">Full Name</label>
+            <input type="text" id="reg-name" name="fullname" placeholder="Enter your full name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="reg-email" name="email" placeholder="Enter your email" required>
+
+            <label for="username">Username</label>
+            <input type="text" id="reg-username" name="username" placeholder="Enter your username" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="reg-password" name="password" placeholder="Enter your password" required>
+
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="reg-confirm-password" placeholder="Confirm your password" required>
+
+            <button id="register-btn">Register</button>
+            <p style="color: red;">
+            {% for message in messages %}
+            {{message}}
+            {% endfor %}
+            </p>
+            </form>
+        </div>
+        <p>Already have an account? <a href="#" onclick="showLoginPage()">Login</a></p>
+    </div>
+
+    <script>
+        function showLoginPage() {
+            document.getElementById('login-page').style.display = 'block';
+            document.getElementById('registration-page').style.display = 'none';
+        }
+
+        function showRegistrationPage() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('registration-page').style.display = 'block';
+        }
+
+        
+        showLoginPage();
+
+        
+
+        
+        
+    </script>
+
+</body>
+</html>
