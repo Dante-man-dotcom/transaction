@@ -38,7 +38,7 @@ def register(request):
             messages.error(request, "Username already exists!")
             return redirect('registerpage')
 
-        user = CustomUser.objects.create_user(first_name = fullname, username=email, password=password, email=email)
+        user = CustomUser.objects.create_user(first_name = fullname,last_name=username, username=email, password=password, email=email)
         user.save()
         messages.success(request, "Registration successful! You can now log in.")
         return redirect('loginpage')
@@ -70,7 +70,7 @@ def transac_create(request):
         print("Got'em", receiver_username)
 
         try:
-            receiver = CustomUser.objects.get(first_name=receiver_username)
+            receiver = CustomUser.objects.get(last_name=receiver_username)
             print("Receiver found:", receiver)
             if receiver == sender:
                 messages.error(request, "You cannot send money to yourself.")
