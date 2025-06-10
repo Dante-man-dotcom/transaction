@@ -98,7 +98,7 @@ AUTH_USER_MODEL = 'transac_app.CustomUser'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'db_tr',
+        'NAME': 'transac',
         'USER': 'transac_user',
         'PASSWORD': 'iH8EnE9beH98AAWRA2nUy4XaLujyKU23',
         'HOST': 'dpg-d1449qu3jp1c73d8ngf0-a',
