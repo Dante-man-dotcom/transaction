@@ -99,9 +99,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'db_tr',
-        'USER': 'db_tr_user',
-        'PASSWORD': 'dDhrqSCeqafaSapz0Lz4KPu3zfbhBAGr',
-        'HOST': 'dpg-d0spu8k9c44c73fdoul0-a',
+        'USER': 'transac_user',
+        'PASSWORD': 'iH8EnE9beH98AAWRA2nUy4XaLujyKU23',
+        'HOST': 'dpg-d1449qu3jp1c73d8ngf0-a',
         'PORT': '5432',  # Default PostgreSQL port
     }
 }
